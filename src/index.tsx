@@ -91,18 +91,24 @@ const App = () => {
     [goal],
   );
 
-  let startFullDateString: string = window.localStorage.getItem(
-    'controlfreak_start_date',
-  );
-  let startFullDate: Date = new Date();
+  const [startDate, setStartDate] = React.useState(new Date());
 
-  if (startFullDateString) {
-    startFullDate = new Date(startFullDateString);
-  } else {
-    window.localStorage.setItem(
+  const getStartDate = () => {
+    let startFullDateString: string = window.localStorage.getItem(
       'controlfreak_start_date',
-      startFullDate.toString(),
     );
+    let startFullDate: Date = new Date();
+
+    if (startFullDateString) {
+      startFullDate = new Date(startFullDateString);
+    } else {
+      window.localStorage.setItem(
+        'controlfreak_start_date',
+        startFullDate.toString(),
+      );
+    }
+
+    setStartDate(startFullDate);
   }
 
   const initialCalendar = window.localStorage.getItem(goalKeyName) || '{}';
@@ -124,12 +130,20 @@ const App = () => {
     window.localStorage.setItem(goalKeyName, JSON.stringify(calendarData));
   };
 
+  React.useEffect(getStartDate, []);
   React.useEffect(saveCalendarToLS, [calendarData]);
   React.useEffect(saveGoalAndMoveCalendarDataToNewLSKey, [goal]);
 
-  const handleCalendarChange = (_: any, allFields: object) => {
-    setCalendarData(allFields);
-  };
+  const handleCalendarChange = React.useCallback(
+    (_: any, allFields: object) => {
+      setCalendarData(allFields);
+    },
+    [],
+  );
+
+  const resetData = React.useCallback(() => {
+    setGoal(defaultGoal);
+  }, []);
 
   return (
     <div id="root" className="root">
@@ -156,7 +170,7 @@ const App = () => {
                       size="large"
                       type="link"
                       icon={<DeleteFilled />}
-                      // onClick={resetCalendar}
+                      onClick={resetData}
                     />
                   </Tooltip>
                 </Col>
@@ -170,7 +184,7 @@ const App = () => {
               >
                 <Timeline mode="left">
                   {daysToRender.map((_, idx) => (
-                    <Day date={startFullDate} offset={idx} key={idx} />
+                    <Day date={startDate} offset={idx} key={idx} />
                   ))}
                 </Timeline>
               </Form>
