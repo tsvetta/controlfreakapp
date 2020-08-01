@@ -84,6 +84,20 @@ const App = () => {
     [goal],
   );
 
+  let startFullDateString: string = window.localStorage.getItem(
+    'controlfreak_start_date',
+  );
+  let startFullDate: Date = new Date();
+
+  if (startFullDateString) {
+    startFullDate = new Date(startFullDateString);
+  } else {
+    window.localStorage.setItem(
+      'controlfreak_start_date',
+      startFullDate.toString(),
+    );
+  }
+
   const initialCalendar = window.localStorage.getItem(goalKeyName) || '{}';
   const [calendarData, setCalendarData] = React.useState(
     JSON.parse(initialCalendar),
@@ -133,11 +147,9 @@ const App = () => {
                 onValuesChange={handleCalendarChange}
               >
                 <Timeline mode="left">
-                  {daysToRender.map((_, idx) => {
-                    const startFullDate = new Date(); // TODO: брать из LS
-
-                    return <Day date={startFullDate} offset={idx} key={idx} />;
-                  })}
+                  {daysToRender.map((_, idx) => (
+                    <Day date={startFullDate} offset={idx} key={idx} />
+                  ))}
                 </Timeline>
               </Form>
             </Col>
