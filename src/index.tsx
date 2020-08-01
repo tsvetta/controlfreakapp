@@ -2,45 +2,41 @@ import './index.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  Divider,
-  Typography,
-  Checkbox,
-  Layout,
-  Row,
-  Col,
-  Timeline,
-} from 'antd';
+import { Form, Typography, Checkbox, Layout, Row, Col, Timeline } from 'antd';
 
 const { Title } = Typography;
 const { Content } = Layout;
 
-const HourOfDay = ({ hour }: { hour: string }) => {
+const HourOfDay = ({ hour, date }: { hour: string, date: Date }) => {
+  const fieldName = `${date.toDateString()}_${hour}`.replace(/\s/g, '_');
+
   return (
     <Col span={3} key={hour}>
-      <Checkbox>{hour}</Checkbox>
+      <Form.Item name={fieldName} noStyle valuePropName="checked">
+        <Checkbox>{hour}</Checkbox>
+      </Form.Item>
     </Col>
   );
 };
 
-const TimeOfDay = ({ hours }: { hours: string[] }) => {
+const TimeOfDay = ({ hours, date }: { hours: string[], date: Date }) => {
   return (
     <Row>
       {hours.map((hour) => (
-        <HourOfDay hour={hour} key={hour} />
+        <HourOfDay date={date} hour={hour} key={hour} />
       ))}
     </Row>
   );
 };
 
 const Day = ({ date, offset }: { date: Date; offset: number }) => {
-  const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const timetable = [
+  const weekdays = React.useMemo(() => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], []);
+  const timetable = React.useMemo(() => [
     ['6 am', '7 am', '8 am', '9 am', '10 am', '11 am'],
     ['12 pm', '13 pm', '14 pm', '15 pm', '16 pm', '17 pm'],
     ['18 pm', '19 pm', '20 pm', '21 pm', '22 pm', '23 pm'],
     ['00 am', '1 am', '2 am', '3 am', '4 am', '5 am'],
-  ];
+  ], []);
 
   const startYear = date.getFullYear();
   const startMonth = date.getMonth();
@@ -54,15 +50,21 @@ const Day = ({ date, offset }: { date: Date; offset: number }) => {
     <Timeline.Item key={dateTitle}>
       <Title level={4}>{dateTitle}</Title>
       {timetable.map((hours, idx) => (
-        <TimeOfDay hours={hours} key={idx} />
+        <TimeOfDay date={newDate} hours={hours} key={idx} />
       ))}
     </Timeline.Item>
   );
 };
 
+const saveToLS = (changedFields: any, allFields: any) => {
+  console.log(allFields);
+
+
+};
+
 const App = () => {
   const [purpose, setPurpose] = React.useState('Цель');
-  const daysToRender = new Array(7).fill(null); // TODO: решить сколько дней рендерить по умолчанию и как рендерить больше
+  const daysToRender = React.useMemo(() => new Array(7).fill(null), []); // TODO: решить сколько дней рендерить по умолчанию и как рендерить больше
 
   return (
     <div id="root">
@@ -75,13 +77,15 @@ const App = () => {
 
           <Row>
             <Col span={24}>
-              <Timeline mode="left">
-                {daysToRender.map((_, idx) => {
-                  const startFullDate = new Date(); // TODO: брать из LS
+              <Form name="calendar" onValuesChange={saveToLS}>
+                <Timeline mode="left">
+                  {daysToRender.map((_, idx) => {
+                    const startFullDate = new Date(); // TODO: брать из LS
 
-                  return <Day date={startFullDate} offset={idx} key={idx} />;
-                })}
-              </Timeline>
+                    return <Day date={startFullDate} offset={idx} key={idx} />;
+                  })}
+                </Timeline>
+              </Form>
             </Col>
           </Row>
         </Content>
