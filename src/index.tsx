@@ -2,16 +2,25 @@ import './index.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Form, Typography, Checkbox, Layout, Row, Col, Timeline } from 'antd';
+import {
+  Divider,
+  Form,
+  Typography,
+  Checkbox,
+  Layout,
+  Row,
+  Col,
+  Timeline,
+} from 'antd';
 
 const { Title } = Typography;
 const { Content } = Layout;
 
-const HourOfDay = ({ hour, date }: { hour: string, date: Date }) => {
+const HourOfDay = ({ hour, date }: { hour: string; date: Date }) => {
   const fieldName = `${date.toDateString()}_${hour}`.replace(/\s/g, '_');
 
   return (
-    <Col span={3} key={hour}>
+    <Col span={4} key={hour}>
       <Form.Item name={fieldName} noStyle valuePropName="checked">
         <Checkbox>{hour}</Checkbox>
       </Form.Item>
@@ -19,7 +28,7 @@ const HourOfDay = ({ hour, date }: { hour: string, date: Date }) => {
   );
 };
 
-const TimeOfDay = ({ hours, date }: { hours: string[], date: Date }) => {
+const TimeOfDay = ({ hours, date }: { hours: string[]; date: Date }) => {
   return (
     <Row>
       {hours.map((hour) => (
@@ -30,13 +39,19 @@ const TimeOfDay = ({ hours, date }: { hours: string[], date: Date }) => {
 };
 
 const Day = ({ date, offset }: { date: Date; offset: number }) => {
-  const weekdays = React.useMemo(() => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], []);
-  const timetable = React.useMemo(() => [
-    ['6 am', '7 am', '8 am', '9 am', '10 am', '11 am'],
-    ['12 pm', '13 pm', '14 pm', '15 pm', '16 pm', '17 pm'],
-    ['18 pm', '19 pm', '20 pm', '21 pm', '22 pm', '23 pm'],
-    ['00 am', '1 am', '2 am', '3 am', '4 am', '5 am'],
-  ], []);
+  const weekdays = React.useMemo(
+    () => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    [],
+  );
+  const timetable = React.useMemo(
+    () => [
+      ['6 am', '7 am', '8 am', '9 am', '10 am', '11 am'],
+      ['12 pm', '13 pm', '14 pm', '15 pm', '16 pm', '17 pm'],
+      ['18 pm', '19 pm', '20 pm', '21 pm', '22 pm', '23 pm'],
+      ['00 am', '1 am', '2 am', '3 am', '4 am', '5 am'],
+    ],
+    [],
+  );
 
   const startYear = date.getFullYear();
   const startMonth = date.getMonth();
@@ -56,28 +71,51 @@ const Day = ({ date, offset }: { date: Date; offset: number }) => {
   );
 };
 
-const saveToLS = (changedFields: any, allFields: any) => {
-  console.log(allFields);
-
-
-};
-
 const App = () => {
-  const [purpose, setPurpose] = React.useState('Цель');
-  const daysToRender = React.useMemo(() => new Array(7).fill(null), []); // TODO: решить сколько дней рендерить по умолчанию и как рендерить больше
+  const initialGoal = window.localStorage.getItem('controlfreak_goal') || 'Цель';
+  const [goal, setGoal] = React.useState(initialGoal);
+  const goalKeyName = React.useMemo(
+    () => `controlfreak_${goal.replace(/\s/g, '_')}_calendar`,
+    [goal],
+  );
+
+  const initialCalendar = window.localStorage.getItem(goalKeyName) || "{}";
+  const [calendarData, setCalendarData] = React.useState(JSON.parse(initialCalendar));
+
+  // TODO: решить сколько дней рендерить по умолчанию и как рендерить больше
+  const daysToRender = React.useMemo(() => new Array(7).fill(null), []);
+
+  // TODO: вынести в хук ↓
+  const saveCalendarToLS = () => {
+    window.localStorage.setItem(goalKeyName, JSON.stringify(calendarData));
+  };
+
+  // TODO: сделать удаление старых ключей из LS
+  const saveGoalAndMoveCalendarDataToNewLSKey = () => {
+    window.localStorage.setItem('controlfreak_goal', goal);
+    window.localStorage.setItem(goalKeyName, JSON.stringify(calendarData));
+  };
+
+  React.useEffect(saveCalendarToLS, [calendarData]);
+  React.useEffect(saveGoalAndMoveCalendarDataToNewLSKey, [goal]);
+
+  const handleCalendarChange = (_: any, allFields: object) => {
+    setCalendarData(allFields);
+  };
 
   return (
     <div id="root">
       <Layout>
         <Content>
-          <Title>ControlFreakApp</Title>
-          <Title level={3} editable={{ onChange: setPurpose }}>
-            {purpose}
-          </Title>
-
           <Row>
-            <Col span={24}>
-              <Form name="calendar" onValuesChange={saveToLS}>
+            <Col span={10} offset={7}>
+              <Title>ControlFreakApp</Title>
+
+              <Title level={3} editable={{ onChange: setGoal }}>
+                {goal}
+              </Title>
+              <Divider style={{ borderColor: '#303030', borderWidth: 2 }} />
+              <Form initialValues={calendarData} name="calendar" onValuesChange={handleCalendarChange}>
                 <Timeline mode="left">
                   {daysToRender.map((_, idx) => {
                     const startFullDate = new Date(); // TODO: брать из LS
