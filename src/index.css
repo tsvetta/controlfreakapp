@@ -1,1 +1,17 @@
 @import 'antd/dist/antd.dark.css';
+
+.root {
+  padding-top: 20px;
+}
+
+h1.app-title {
+  color: var(--antd-wave-shadow-color);
+}
+
+.explanation-icon {
+  font-size: 17px;
+  position: relative;
+  top: -17px;
+  left: -7px;
+  color: rgba(255, 255, 255, 0.85);
+}

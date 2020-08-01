@@ -11,10 +11,14 @@ import {
   Row,
   Col,
   Timeline,
+  Tooltip,
 } from 'antd';
+import { QuestionCircleFilled } from '@ant-design/icons';
 
 const { Title } = Typography;
 const { Content } = Layout;
+
+const explanationText = 'Habit tracker for obsessive maniacs';
 
 const HourOfDay = ({ hour, date }: { hour: string; date: Date }) => {
   const fieldName = `${date.toDateString()}_${hour}`.replace(/\s/g, '_');
@@ -72,15 +76,18 @@ const Day = ({ date, offset }: { date: Date; offset: number }) => {
 };
 
 const App = () => {
-  const initialGoal = window.localStorage.getItem('controlfreak_goal') || 'Цель';
+  const initialGoal =
+    window.localStorage.getItem('controlfreak_goal') || 'Цель';
   const [goal, setGoal] = React.useState(initialGoal);
   const goalKeyName = React.useMemo(
     () => `controlfreak_${goal.replace(/\s/g, '_')}_calendar`,
     [goal],
   );
 
-  const initialCalendar = window.localStorage.getItem(goalKeyName) || "{}";
-  const [calendarData, setCalendarData] = React.useState(JSON.parse(initialCalendar));
+  const initialCalendar = window.localStorage.getItem(goalKeyName) || '{}';
+  const [calendarData, setCalendarData] = React.useState(
+    JSON.parse(initialCalendar),
+  );
 
   // TODO: решить сколько дней рендерить по умолчанию и как рендерить больше
   const daysToRender = React.useMemo(() => new Array(7).fill(null), []);
@@ -104,18 +111,27 @@ const App = () => {
   };
 
   return (
-    <div id="root">
+    <div id="root" className="root">
       <Layout>
         <Content>
           <Row>
             <Col span={10} offset={7}>
-              <Title>ControlFreakApp</Title>
+              <Title className="app-title">
+                ControlFreakApp{' '}
+                <Tooltip title={explanationText}>
+                  <QuestionCircleFilled spin className="explanation-icon" />
+                </Tooltip>
+              </Title>
 
               <Title level={3} editable={{ onChange: setGoal }}>
                 {goal}
               </Title>
               <Divider style={{ borderColor: '#303030', borderWidth: 2 }} />
-              <Form initialValues={calendarData} name="calendar" onValuesChange={handleCalendarChange}>
+              <Form
+                initialValues={calendarData}
+                name="calendar"
+                onValuesChange={handleCalendarChange}
+              >
                 <Timeline mode="left">
                   {daysToRender.map((_, idx) => {
                     const startFullDate = new Date(); // TODO: брать из LS
