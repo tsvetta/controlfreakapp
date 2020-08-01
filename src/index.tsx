@@ -12,13 +12,17 @@ import {
   Col,
   Timeline,
   Tooltip,
+  Button,
 } from 'antd';
-import { QuestionCircleFilled } from '@ant-design/icons';
+import { QuestionCircleFilled, DeleteFilled } from '@ant-design/icons';
 
 const { Title } = Typography;
 const { Content } = Layout;
 
-const explanationText = 'Habit tracker for obsessive maniacs';
+const texts = {
+  explain: 'Habit tracker for obsessive maniacs',
+  delete: 'Delete all saved data',
+};
 
 const HourOfDay = ({ hour, date }: { hour: string; date: Date }) => {
   const fieldName = `${date.toDateString()}_${hour}`.replace(/\s/g, '_');
@@ -76,8 +80,11 @@ const Day = ({ date, offset }: { date: Date; offset: number }) => {
 };
 
 const App = () => {
+  const [calendarFormInstance] = Form.useForm();
+
+  const defaultGoal = 'Set goal';
   const initialGoal =
-    window.localStorage.getItem('controlfreak_goal') || 'Цель';
+    window.localStorage.getItem('controlfreak_goal') || defaultGoal;
   const [goal, setGoal] = React.useState(initialGoal);
   const goalKeyName = React.useMemo(
     () => `controlfreak_${goal.replace(/\s/g, '_')}_calendar`,
@@ -132,16 +139,31 @@ const App = () => {
             <Col span={10} offset={7}>
               <Title className="app-title">
                 ControlFreakApp{' '}
-                <Tooltip title={explanationText}>
+                <Tooltip title={texts.explain}>
                   <QuestionCircleFilled spin className="explanation-icon" />
                 </Tooltip>
               </Title>
 
-              <Title level={3} editable={{ onChange: setGoal }}>
-                {goal}
-              </Title>
+              <Row>
+                <Col span={22}>
+                  <Title level={3} editable={{ onChange: setGoal }}>
+                    {goal}
+                  </Title>
+                </Col>
+                <Col span={1} offset={1}>
+                  <Tooltip title={texts.delete}>
+                    <Button
+                      size="large"
+                      type="link"
+                      icon={<DeleteFilled />}
+                      // onClick={resetCalendar}
+                    />
+                  </Tooltip>
+                </Col>
+              </Row>
               <Divider style={{ borderColor: '#303030', borderWidth: 2 }} />
               <Form
+                form={calendarFormInstance}
                 initialValues={calendarData}
                 name="calendar"
                 onValuesChange={handleCalendarChange}
