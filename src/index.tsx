@@ -93,7 +93,7 @@ const App = () => {
 
   const [startDate, setStartDate] = React.useState(new Date());
 
-  const getStartDate = () => {
+  const getAndSetStartDate = () => {
     let startFullDateString: string = window.localStorage.getItem(
       'controlfreak_start_date',
     );
@@ -109,40 +109,38 @@ const App = () => {
     }
 
     setStartDate(startFullDate);
-  }
+  };
 
-  const initialCalendar = window.localStorage.getItem(goalKeyName) || '{}';
-  const [calendarData, setCalendarData] = React.useState(
-    JSON.parse(initialCalendar),
-  );
+  const getFormDataFromLS = () => {
+    return JSON.parse(window.localStorage.getItem(goalKeyName));
+  };
 
   // TODO: решить сколько дней рендерить по умолчанию и как рендерить больше
   const daysToRender = React.useMemo(() => new Array(7).fill(null), []);
 
   // TODO: вынести в хук ↓
-  const saveCalendarToLS = () => {
-    window.localStorage.setItem(goalKeyName, JSON.stringify(calendarData));
-  };
-
   // TODO: сделать удаление старых ключей из LS
   const saveGoalAndMoveCalendarDataToNewLSKey = () => {
     window.localStorage.setItem('controlfreak_goal', goal);
-    window.localStorage.setItem(goalKeyName, JSON.stringify(calendarData));
+    window.localStorage.setItem(goalKeyName, JSON.stringify(calendarFormInstance.getFieldsValue()));
   };
 
-  React.useEffect(getStartDate, []);
-  React.useEffect(saveCalendarToLS, [calendarData]);
+  const getAndSetFormValuesFromLSData = () => {
+    calendarFormInstance.setFieldsValue(getFormDataFromLS());
+  };
+
+  React.useEffect(getAndSetStartDate, []);
+  React.useEffect(getAndSetFormValuesFromLSData, []);
   React.useEffect(saveGoalAndMoveCalendarDataToNewLSKey, [goal]);
 
-  const handleCalendarChange = React.useCallback(
-    (_: any, allFields: object) => {
-      setCalendarData(allFields);
-    },
-    [],
-  );
+  const saveFormDataToLs = (_: object, allFields: object) => {
+    window.localStorage.setItem(goalKeyName, JSON.stringify(allFields))
+  };
 
   const resetData = React.useCallback(() => {
     setGoal(defaultGoal);
+    calendarFormInstance.resetFields();
+    window.localStorage.setItem(goalKeyName, JSON.stringify(calendarFormInstance.getFieldsValue()));
   }, []);
 
   return (
@@ -178,9 +176,8 @@ const App = () => {
               <Divider style={{ borderColor: '#303030', borderWidth: 2 }} />
               <Form
                 form={calendarFormInstance}
-                initialValues={calendarData}
                 name="calendar"
-                onValuesChange={handleCalendarChange}
+                onValuesChange={saveFormDataToLs}
               >
                 <Timeline mode="left">
                   {daysToRender.map((_, idx) => (
