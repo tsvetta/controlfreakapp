@@ -13,13 +13,19 @@ import {
   Timeline,
   Tooltip,
   Button,
+  Modal,
 } from 'antd';
-import { QuestionCircleFilled, DeleteFilled } from '@ant-design/icons';
+import {
+  ExclamationCircleOutlined,
+  QuestionCircleFilled,
+  DeleteFilled,
+} from '@ant-design/icons';
 
 import { useCalendarForm } from './use-calendar-form';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Content } = Layout;
+const { confirm } = Modal;
 
 const texts = {
   explain: 'Habit tracker for obsessive maniacs',
@@ -99,6 +105,22 @@ const App = () => {
     saveFormDataToLs(allFields);
   };
 
+  const confirmDeletion = () => {
+    confirm({
+      title: 'Delete all?',
+      icon: <ExclamationCircleOutlined />,
+      content: "You won't be able to recover your data after the deletion",
+      okText: 'Yes',
+      cancelText: 'No',
+      okButtonProps: {
+        danger: true,
+      },
+      onOk() {
+        resetData();
+      },
+    });
+  };
+
   return (
     <div id="root" className="root">
       <Layout>
@@ -124,7 +146,7 @@ const App = () => {
                       size="large"
                       type="link"
                       icon={<DeleteFilled />}
-                      onClick={resetData}
+                      onClick={confirmDeletion}
                     />
                   </Tooltip>
                 </Col>
