@@ -4,6 +4,14 @@ import { FormInstance } from 'antd/lib/form';
 export const createGoalKeyName = (goal: string) =>
   `controlfreak_${goal.replace(/\s/g, '_')}_calendar`;
 
+const getDaysDiff = (startDate: Date): null[] => {
+  const msDiff: number = Date.now() - startDate.getTime();
+  const daysDiff: number = Math.ceil(msDiff / (1000 * 3600 * 24));
+  const days = new Array(daysDiff).fill(null);
+
+  return days;
+}
+
 export const LS_KEYS = {
   goal: 'controlfreak_goal',
   startDate: 'controlfreak_start_date',
@@ -66,8 +74,14 @@ export const useCalendarForm = (formInstance: FormInstance) => {
   };
 
   const resetData = React.useCallback(() => {
+    const newStatDate = new Date();
+    setStartDate(newStatDate);
+    window.localStorage.setItem(LS_KEYS.startDate, newStatDate.toString());
+
     updateGoal(defaultGoal);
+
     formInstance.resetFields();
+
     window.localStorage.setItem(
       goalKeyName,
       JSON.stringify(formInstance.getFieldsValue()),
@@ -78,7 +92,10 @@ export const useCalendarForm = (formInstance: FormInstance) => {
     window.localStorage.setItem(goalKeyName, JSON.stringify(fields));
   };
 
+  const days = React.useMemo(() => getDaysDiff(startDate), [startDate]);
+
   return {
+    days,
     goal,
     startDate,
     updateGoal,

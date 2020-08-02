@@ -90,10 +90,8 @@ const Day = ({ date, offset }: { date: Date; offset: number }) => {
 const App = () => {
   const [calendarFormInstance] = Form.useForm();
 
-  // TODO: решить сколько дней рендерить по умолчанию и как рендерить больше
-  const daysToRender = React.useMemo(() => new Array(7).fill(null), []);
-
   const {
+    days,
     goal,
     startDate,
     updateGoal,
@@ -158,7 +156,7 @@ const App = () => {
                 onValuesChange={handleSaveFormDataToLs}
               >
                 <Timeline mode="left" reverse>
-                  {daysToRender.map((_, idx) => (
+                  {days.map((_, idx) => (
                     <Day date={startDate} offset={idx} key={idx} />
                   ))}
                 </Timeline>
