@@ -19,17 +19,19 @@ import {
   ExclamationCircleOutlined,
   QuestionCircleFilled,
   DeleteFilled,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 
 import { useCalendarForm } from './use-calendar-form';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { Content } = Layout;
 const { confirm } = Modal;
 
 const texts = {
   explain: 'Habit tracker for obsessive maniacs',
   delete: 'Delete all saved data',
+  newDay: 'New day will appear tomorrow',
 };
 
 const HourOfDay = ({ hour, date }: { hour: string; date: Date }) => {
@@ -155,7 +157,17 @@ const App = () => {
                 name="calendar"
                 onValuesChange={handleSaveFormDataToLs}
               >
-                <Timeline mode="left" reverse>
+                <Timeline
+                  mode="left"
+                  reverse
+                  pending={'New day will appear tomorrow'}
+                  pendingDot={
+                    <Tooltip title={texts.newDay}>
+                      <PlusCircleOutlined />
+                    </Tooltip>
+                  }
+                  className="control-timeline"
+                >
                   {days.map((_, idx) => (
                     <Day date={startDate} offset={idx} key={idx} />
                   ))}
