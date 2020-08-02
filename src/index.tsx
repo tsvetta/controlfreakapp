@@ -122,7 +122,7 @@ const App = () => {
   };
 
   return (
-    <div id="root" className="root">
+    <div className="app">
       <Layout>
         <Content>
           <Row>
