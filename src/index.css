@@ -67,6 +67,12 @@ h3.app-goal {
     .ant-checkbox-inner {
       width: 10px;
       height: 10px;
+
+      &::after {
+        left: 1px;
+        width: 5px;
+        height: 7px;
+      }
     }
   }
 
