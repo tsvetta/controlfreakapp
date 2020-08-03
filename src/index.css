@@ -6,6 +6,16 @@
 
 h1.app-title {
   color: var(--antd-wave-shadow-color);
+
+  @media screen and (max-width: 550px) {
+    font-size: 25px;
+  }
+}
+
+h3.app-goal {
+  @media screen and (max-width: 550px) {
+    font-size: 20px;
+  }
 }
 
 .explanation-icon {
@@ -24,5 +34,54 @@ h1.app-title {
       min-height: 10px;
       top: auto;
     }
+  }
+
+  @media screen and (max-width: 470px) {
+    .ant-timeline-item-content {
+      margin-left: 14px;
+    }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .ant-form label.day-checkbox {
+    font-size: 11px;
+
+    & .ant-checkbox + span {
+      padding-right: 3px;
+      padding-left: 4px;
+    }
+  }
+
+  h4.day-title {
+    font-size: 13px;
+    padding-top: 3px;
+  }
+}
+
+@media screen and (max-width: 470px) {
+  .ant-form label.day-checkbox {
+    font-size: 10px;
+    padding-top: 5px;
+
+    .ant-checkbox-inner {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  h4.day-title {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .ant-form label.day-checkbox {
+    font-size: 9px;
+  }
+
+  h4.day-title {
+    font-size: 11px;
+    padding-top: 5px;
   }
 }

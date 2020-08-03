@@ -40,7 +40,7 @@ const HourOfDay = ({ hour, date }: { hour: string; date: Date }) => {
   return (
     <Col span={4} key={hour}>
       <Form.Item name={fieldName} noStyle valuePropName="checked">
-        <Checkbox>{hour}</Checkbox>
+        <Checkbox className="day-checkbox">{hour}</Checkbox>
       </Form.Item>
     </Col>
   );
@@ -81,7 +81,9 @@ const Day = ({ date, offset }: { date: Date; offset: number }) => {
 
   return (
     <Timeline.Item key={dateTitle}>
-      <Title level={4}>{dateTitle}</Title>
+      <Title level={4} className="day-title">
+        {dateTitle}
+      </Title>
       {timetable.map((hours, idx) => (
         <TimeOfDay date={newDate} hours={hours} key={idx} />
       ))}
@@ -126,7 +128,14 @@ const App = () => {
       <Layout>
         <Content>
           <Row>
-            <Col span={10} offset={7}>
+            <Col
+              xxl={{ span: 10, offset: 7 }}
+              xl={{ span: 12, offset: 6 }}
+              lg={{ span: 14, offset: 5 }}
+              md={{ span: 16, offset: 4 }}
+              sm={{ span: 20, offset: 2 }}
+              xs={{ span: 22, offset: 1 }}
+            >
               <Title className="app-title">
                 ControlFreakApp{' '}
                 <Tooltip title={texts.explain}>
@@ -136,7 +145,11 @@ const App = () => {
 
               <Row>
                 <Col span={22}>
-                  <Title level={3} editable={{ onChange: updateGoal }}>
+                  <Title
+                    level={3}
+                    editable={{ onChange: updateGoal }}
+                    className="app-goal"
+                  >
                     {goal}
                   </Title>
                 </Col>
