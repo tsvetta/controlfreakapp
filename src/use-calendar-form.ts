@@ -5,8 +5,11 @@ export const createGoalKeyName = (goal: string) =>
   `controlfreak_${goal.replace(/\s/g, '_')}_calendar`;
 
 const getDaysDiff = (startDate: Date): null[] => {
-  const msDiff: number = Date.now() - startDate.getTime();
-  const daysDiff: number = Math.ceil(msDiff / (1000 * 3600 * 24));
+  const now = new Date();
+  const currentDateMs: number = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const startDateMs: number = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime();
+  const msDiff: number = currentDateMs - startDateMs;
+  const daysDiff: number = Math.floor(msDiff / (1000 * 3600 * 24)) + 1;
   const days = new Array(daysDiff).fill(null);
 
   return days;
