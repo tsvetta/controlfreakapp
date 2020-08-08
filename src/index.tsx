@@ -105,20 +105,16 @@ const AppTitle = ({ form }: { form: FormInstance }) => {
           <QuestionCircleFilled spin className="explanation-icon" />
         </Tooltip>
       </Title>
-      <Row>
-        <Col>
-          <Title
-            level={3}
-            editable={{
-              onChange: updateGoal,
-              // tooltip: 'Edit goal', // TODO: add after https://github.com/ant-design/ant-design/issues/25994
-            }}
-            className="app-goal"
-          >
-            {goal}
-          </Title>
-        </Col>
-      </Row>
+      <Title
+        level={3}
+        editable={{
+          onChange: updateGoal,
+          // tooltip: 'Edit goal', // TODO: add after https://github.com/ant-design/ant-design/issues/25994
+        }}
+        className="app-goal"
+      >
+        {goal}
+      </Title>
     </>
   );
 };
@@ -131,11 +127,13 @@ const SettingsPanel = ({ form }: { form: FormInstance }) => {
   return (
     <>
       <Affix className="layout-select-wrapper">
-        <Select defaultValue="hourly" onChange={handleLayoutChange}>
-          <Option value="hourly">Hourly</Option>
-          <Option value="daily">Daily</Option>
-          <Option value="monthly">Monthly</Option>
-        </Select>
+        <Form.Item name="layout-type" label="Layout">
+          <Select defaultValue="hourly" onChange={handleLayoutChange}>
+            <Option value="hourly">Hourly</Option>
+            <Option value="daily">Daily</Option>
+            <Option value="monthly">Monthly</Option>
+          </Select>
+        </Form.Item>
       </Affix>
       <Affix className="delete-button-wrapper">
         <Popconfirm
@@ -169,25 +167,25 @@ const App = () => {
 
   return (
     <div className="app">
-      <SettingsPanel form={calendarFormInstance} />
-      <Layout>
-        <Content>
-          <Row>
-            <Col
-              xxl={{ span: 10, offset: 7 }}
-              xl={{ span: 12, offset: 6 }}
-              lg={{ span: 14, offset: 5 }}
-              md={{ span: 16, offset: 4 }}
-              sm={{ span: 20, offset: 2 }}
-              xs={{ span: 22, offset: 1 }}
-            >
-              <AppTitle form={calendarFormInstance} />
-              <Divider style={{ borderColor: '#303030', borderWidth: 2 }} />
-              <Form
-                form={calendarFormInstance}
-                name="calendar"
-                onValuesChange={handleSaveFormDataToLs}
+      <Form
+        form={calendarFormInstance}
+        name="calendar"
+        onValuesChange={handleSaveFormDataToLs}
+      >
+        <SettingsPanel form={calendarFormInstance} />
+        <Layout>
+          <Content>
+            <Row>
+              <Col
+                xxl={{ span: 10, offset: 7 }}
+                xl={{ span: 12, offset: 6 }}
+                lg={{ span: 14, offset: 5 }}
+                md={{ span: 16, offset: 4 }}
+                sm={{ span: 20, offset: 2 }}
+                xs={{ span: 22, offset: 1 }}
               >
+                <AppTitle form={calendarFormInstance} />
+                <Divider style={{ borderColor: '#303030', borderWidth: 2 }} />
                 <Timeline
                   mode="left"
                   reverse
@@ -203,11 +201,11 @@ const App = () => {
                     <Day date={startDate} offset={idx} key={idx} />
                   ))}
                 </Timeline>
-              </Form>
-            </Col>
-          </Row>
-        </Content>
-      </Layout>
+              </Col>
+            </Row>
+          </Content>
+        </Layout>
+      </Form>
     </div>
   );
 };
