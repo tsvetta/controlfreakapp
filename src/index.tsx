@@ -14,6 +14,8 @@ import {
   Tooltip,
   Button,
   Popconfirm,
+  Select,
+  Affix,
 } from 'antd';
 import {
   ExclamationCircleOutlined,
@@ -21,15 +23,17 @@ import {
   DeleteFilled,
   PlusCircleOutlined,
 } from '@ant-design/icons';
+import { FormInstance } from 'antd/lib/form';
 
 import { useCalendarForm } from './use-calendar-form';
 
 const { Title } = Typography;
 const { Content } = Layout;
+const { Option } = Select;
 
 const texts = {
   explain: 'Habit tracker for obsessive maniacs',
-  delete: 'Delete all saved data',
+  delete: 'Delete all?',
   newDay: 'New day will appear tomorrow',
 };
 
@@ -90,17 +94,74 @@ const Day = ({ date, offset }: { date: Date; offset: number }) => {
   );
 };
 
+const AppTitle = ({ form }: { form: FormInstance }) => {
+  const { goal, updateGoal } = useCalendarForm(form);
+
+  return (
+    <>
+      <Title className="app-title">
+        ControlFreakApp{' '}
+        <Tooltip title={texts.explain}>
+          <QuestionCircleFilled spin className="explanation-icon" />
+        </Tooltip>
+      </Title>
+      <Row>
+        <Col>
+          <Title
+            level={3}
+            editable={{
+              onChange: updateGoal,
+              // tooltip: 'Edit goal', // TODO: add after https://github.com/ant-design/ant-design/issues/25994
+            }}
+            className="app-goal"
+          >
+            {goal}
+          </Title>
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+const SettingsPanel = ({ form }: { form: FormInstance }) => {
+  const { resetData } = useCalendarForm(form);
+
+  const handleLayoutChange = () => {};
+
+  return (
+    <>
+      <Affix className="layout-select-wrapper">
+        <Select defaultValue="hourly" onChange={handleLayoutChange}>
+          <Option value="hourly">Hourly</Option>
+          <Option value="daily">Daily</Option>
+          <Option value="monthly">Monthly</Option>
+        </Select>
+      </Affix>
+      <Affix className="delete-button-wrapper">
+        <Popconfirm
+          title={texts.delete}
+          onConfirm={resetData}
+          okText="Yes"
+          cancelText="No"
+          placement="bottomRight"
+          icon={<ExclamationCircleOutlined />}
+          okButtonProps={{
+            danger: true,
+          }}
+        >
+          <Button size="large" type="link" icon={<DeleteFilled />} />
+        </Popconfirm>
+      </Affix>
+    </>
+  );
+};
+
 const App = () => {
   const [calendarFormInstance] = Form.useForm();
 
-  const {
-    days,
-    goal,
-    startDate,
-    updateGoal,
-    resetData,
-    saveFormDataToLs,
-  } = useCalendarForm(calendarFormInstance);
+  const { days, startDate, saveFormDataToLs } = useCalendarForm(
+    calendarFormInstance,
+  );
 
   const handleSaveFormDataToLs = (_: object, allFields: object) => {
     saveFormDataToLs(allFields);
@@ -108,6 +169,7 @@ const App = () => {
 
   return (
     <div className="app">
+      <SettingsPanel form={calendarFormInstance} />
       <Layout>
         <Content>
           <Row>
@@ -119,47 +181,7 @@ const App = () => {
               sm={{ span: 20, offset: 2 }}
               xs={{ span: 22, offset: 1 }}
             >
-              <Title className="app-title">
-                ControlFreakApp{' '}
-                <Tooltip title={texts.explain}>
-                  <QuestionCircleFilled spin className="explanation-icon" />
-                </Tooltip>
-              </Title>
-
-              <Row>
-                <Col span={22}>
-                  <Title
-                    level={3}
-                    editable={{
-                      onChange: updateGoal,
-                      // tooltip: 'Edit goal', // TODO: add after https://github.com/ant-design/ant-design/issues/25994
-                    }}
-                    className="app-goal"
-                  >
-                    {goal}
-                  </Title>
-                </Col>
-                <Col span={1} offset={1}>
-                  <Tooltip title={texts.delete}>
-                    <Popconfirm
-                      title="Delete all?"
-                      onConfirm={resetData}
-                      okText="Yes"
-                      cancelText="No"
-                      icon={<ExclamationCircleOutlined />}
-                      okButtonProps={{
-                        danger: true,
-                      }}
-                    >
-                      <Button
-                        size="large"
-                        type="link"
-                        icon={<DeleteFilled />}
-                      />
-                    </Popconfirm>
-                  </Tooltip>
-                </Col>
-              </Row>
+              <AppTitle form={calendarFormInstance} />
               <Divider style={{ borderColor: '#303030', borderWidth: 2 }} />
               <Form
                 form={calendarFormInstance}
