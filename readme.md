@@ -4,8 +4,9 @@
 - [x] adaptive css
 - [x] save all app data in one LS field
 - [ ] unit tests
-- [ ] create more than one page
 - [ ] choose from several layouts
+- [ ] browser notifications?
+- [ ] create more than one page
 - [ ] backward compatibility after updates
 - [ ] backend
 - [ ] share links
