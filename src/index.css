@@ -102,10 +102,18 @@ h3.app-goal {
   top: 13px;
   right: calc(10px + 40px + 7px);
 
+  .ant-affix {
+    top: 13px !important;
+  }
+
   @media screen and (max-width: 470px) {
     right: auto;
     left: 14px;
     top: 55px;
+
+    .ant-affix {
+      top: 55px !important;
+    }
   }
 }
 
@@ -114,7 +122,15 @@ h3.app-goal {
   top: 10px;
   right: 10px;
 
+  .ant-affix {
+    top: 10px !important;
+  }
+
   @media screen and (max-width: 470px) {
     top: 15px;
+
+    .ant-affix {
+      top: 15px !important;
+    }
   }
 }
