@@ -2,7 +2,8 @@
 
 - [x] add new day every day
 - [x] adaptive css
-- [x] save all app data in one LS field
+- [ ] develop nice data structure for any layout
+- [ ] save all app data in one LS field
 - [ ] unit tests
 - [ ] choose from several layouts
 - [ ] browser notifications?
