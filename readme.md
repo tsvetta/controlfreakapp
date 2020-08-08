@@ -11,3 +11,5 @@
 - [ ] backend
 - [ ] share links
 - [ ] export/import progress
+
+[Data structure](./data-structure.md)
