@@ -1,5 +1,9 @@
 @import 'antd/dist/antd.dark.css';
 
+:root {
+  --title-margin-mobile: 55px;
+}
+
 .app {
   padding-top: 20px;
 }
@@ -11,9 +15,9 @@ h1.app-title {
     font-size: 25px;
   }
 
-  @media screen and (max-width: 470px) {
+  @media screen and (max-width: 610px) {
     font-size: 20px;
-    margin-bottom: 55px;
+    margin-bottom: var(--title-margin-mobile);
   }
 }
 
@@ -98,6 +102,7 @@ h3.app-goal {
 }
 
 .layout-select-wrapper {
+  z-index: 1;
   position: absolute;
   top: 13px;
   right: calc(10px + 40px + 7px);
@@ -106,18 +111,36 @@ h3.app-goal {
     top: 13px !important;
   }
 
-  @media screen and (max-width: 470px) {
+  @media screen and (max-width: 610px) {
     right: auto;
-    left: 14px;
-    top: 55px;
+    left: 50px;
+    top: var(--title-margin-mobile);
 
     .ant-affix {
-      top: 55px !important;
+      top: var(--title-margin-mobile) !important;
     }
+  }
+
+  @media screen and (max-width: 575px) {
+    left: 25px;
+
+    .ant-row.ant-form-item {
+      flex-wrap: unset;
+
+      .ant-col.ant-form-item-label {
+        flex: 0 0 auto;
+        padding-right: 10px;
+      }
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    left: 15px;
   }
 }
 
 .delete-button-wrapper {
+  z-index: 1;
   position: absolute;
   top: 10px;
   right: 10px;
@@ -126,7 +149,7 @@ h3.app-goal {
     top: 10px !important;
   }
 
-  @media screen and (max-width: 470px) {
+  @media screen and (max-width: 610px) {
     top: 15px;
 
     .ant-affix {

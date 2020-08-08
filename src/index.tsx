@@ -129,7 +129,6 @@ const SettingsPanel = ({ form }: { form: FormInstance }) => {
       <Affix className="layout-select-wrapper">
         <Form.Item name="layout-type" label="Layout">
           <Select
-            defaultValue="hourly"
             onChange={handleLayoutChange}
             style={{ minWidth: 100 }}
           >
