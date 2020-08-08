@@ -147,7 +147,10 @@ const App = () => {
                 <Col span={22}>
                   <Title
                     level={3}
-                    editable={{ onChange: updateGoal }}
+                    editable={{
+                      onChange: updateGoal,
+                      // tooltip: 'Edit goal', // TODO: add after https://github.com/ant-design/ant-design/issues/25994
+                    }}
                     className="app-goal"
                   >
                     {goal}
