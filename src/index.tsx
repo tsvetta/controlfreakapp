@@ -13,7 +13,7 @@ import {
   Timeline,
   Tooltip,
   Button,
-  Modal,
+  Popconfirm,
 } from 'antd';
 import {
   ExclamationCircleOutlined,
@@ -26,7 +26,6 @@ import { useCalendarForm } from './use-calendar-form';
 
 const { Title } = Typography;
 const { Content } = Layout;
-const { confirm } = Modal;
 
 const texts = {
   explain: 'Habit tracker for obsessive maniacs',
@@ -107,22 +106,6 @@ const App = () => {
     saveFormDataToLs(allFields);
   };
 
-  const confirmDeletion = () => {
-    confirm({
-      title: 'Delete all?',
-      icon: <ExclamationCircleOutlined />,
-      content: "You won't be able to recover your data after the deletion",
-      okText: 'Yes',
-      cancelText: 'No',
-      okButtonProps: {
-        danger: true,
-      },
-      onOk() {
-        resetData();
-      },
-    });
-  };
-
   return (
     <div className="app">
       <Layout>
@@ -158,12 +141,22 @@ const App = () => {
                 </Col>
                 <Col span={1} offset={1}>
                   <Tooltip title={texts.delete}>
-                    <Button
-                      size="large"
-                      type="link"
-                      icon={<DeleteFilled />}
-                      onClick={confirmDeletion}
-                    />
+                    <Popconfirm
+                      title="Delete all?"
+                      onConfirm={resetData}
+                      okText="Yes"
+                      cancelText="No"
+                      icon={<ExclamationCircleOutlined />}
+                      okButtonProps={{
+                        danger: true,
+                      }}
+                    >
+                      <Button
+                        size="large"
+                        type="link"
+                        icon={<DeleteFilled />}
+                      />
+                    </Popconfirm>
                   </Tooltip>
                 </Col>
               </Row>
