@@ -84,12 +84,16 @@ const Day = ({ date, offset }: { date: Date; offset: number }) => {
 
   return (
     <Timeline.Item key={dateTitle}>
-      <Title level={4} className="day-title">
-        {dateTitle}
-      </Title>
-      {timetable.map((hours, idx) => (
-        <TimeOfDay date={newDate} hours={hours} key={idx} />
-      ))}
+      <fieldset name={`day-${date.toDateString()}`.replace(/\s/g, '_')}>
+        <legend className="day-title">
+
+            {dateTitle}
+
+        </legend>
+        {timetable.map((hours, idx) => (
+          <TimeOfDay date={newDate} hours={hours} key={idx} />
+        ))}
+      </fieldset>
     </Timeline.Item>
   );
 };

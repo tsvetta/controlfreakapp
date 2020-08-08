@@ -35,6 +35,10 @@ h3.app-goal {
   color: rgba(255, 255, 255, 0.85);
 }
 
+legend.day-title {
+  border-bottom: none;
+}
+
 .ant-timeline.control-timeline {
   .ant-timeline-item-pending {
     font-size: 0;
@@ -62,7 +66,7 @@ h3.app-goal {
     }
   }
 
-  h4.day-title {
+  legend.day-title {
     font-size: 13px;
     padding-top: 3px;
   }
@@ -85,7 +89,7 @@ h3.app-goal {
     }
   }
 
-  h4.day-title {
+  legend.day-title {
     font-size: 12px;
   }
 }
@@ -95,7 +99,7 @@ h3.app-goal {
     font-size: 9px;
   }
 
-  h4.day-title {
+  legend.day-title {
     font-size: 11px;
     padding-top: 5px;
   }
