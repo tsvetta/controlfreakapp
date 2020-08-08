@@ -6,14 +6,22 @@ export const createGoalKeyName = (goal: string) =>
 
 const getDaysDiff = (startDate: Date): null[] => {
   const now = new Date();
-  const currentDateMs: number = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const startDateMs: number = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime();
+  const currentDateMs: number = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
+  const startDateMs: number = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth(),
+    startDate.getDate(),
+  ).getTime();
   const msDiff: number = currentDateMs - startDateMs;
   const daysDiff: number = Math.floor(msDiff / (1000 * 3600 * 24)) + 1;
   const days = new Array(daysDiff).fill(null);
 
   return days;
-}
+};
 
 export const LS_KEYS = {
   goal: 'controlfreak_goal',
@@ -50,7 +58,12 @@ export const useCalendarForm = (formInstance: FormInstance) => {
   };
 
   const getAndSetFormValuesFromLSData = () => {
-    formInstance.setFieldsValue(getFormDataFromLS());
+    const formData = {
+      ...getFormDataFromLS(),
+      'layout-type': 'hourly', // TODO: get from LS
+    }
+
+    formInstance.setFieldsValue(formData);
   };
 
   React.useEffect(getAndSetFormValuesFromLSData, []);
